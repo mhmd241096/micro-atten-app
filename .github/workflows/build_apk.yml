@@ -26,19 +26,58 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: 4. Generate Android Platform Files & Permissions
+      - name: 4. Backup User Files & Generate Android Project
         run: |
+          # حفظ ملف الكود و pubspec قبل توليد ملفات الأندرويد حتى لا يتم مسحها
+          mkdir -p /tmp/backup
+          if [ -f "lib/main.dart" ]; then
+            cp lib/main.dart /tmp/backup/main.dart
+          elif [ -f "main.dart" ]; then
+            cp main.dart /tmp/backup/main.dart
+          fi
+          if [ -f "pubspec.yaml" ]; then
+            cp pubspec.yaml /tmp/backup/pubspec.yaml
+          fi
+
+          # توليد بيئة الأندرويد الكاملة
           flutter create . --project-name micro_portal_app --org com.bsu.microbiology --platforms=android
-          # إضافة صلاحية الإنترنت ورفع ملفات الأعذار الطبية في AndroidManifest.xml تلقائياً على السحابة
+
+          # استرجاع ملفاتك الأصلية بعد التوليد
+          mkdir -p lib
+          if [ -f "/tmp/backup/main.dart" ]; then
+            cp /tmp/backup/main.dart lib/main.dart
+          fi
+          if [ -f "/tmp/backup/pubspec.yaml" ]; then
+            cp /tmp/backup/pubspec.yaml pubspec.yaml
+          fi
+
+          # إزالة ملف اختبار العداد الافتراضي الذي يسبب فشل البناء
+          rm -f test/widget_test.dart
+
+      - name: 5. Configure Android Manifest & SDK Versions
+        run: |
+          # إضافة صلاحية الإنترنت في AndroidManifest.xml
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/><application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
 
-      - name: 5. Install Flutter Dependencies
+          # رفع compileSdk إلى 35 و minSdk إلى 21 لدعم flutter_inappwebview
+          if [ -f "android/app/build.gradle" ]; then
+            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/g' android/app/build.gradle
+            sed -i 's/compileSdk flutter.compileSdkVersion/compileSdk 35/g' android/app/build.gradle
+            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
+          fi
+          if [ -f "android/app/build.gradle.kts" ]; then
+            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/g' android/app/build.gradle.kts
+            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle.kts
+          fi
+
+      - name: 6. Install Flutter Dependencies
         run: flutter pub get
 
-      - name: 6. Build Release APK
+      - name: 7. Build Release APK
         run: flutter build apk --release --no-tree-shake-icons
 
-      - name: 7. Upload Ready-to-Download APK Artifact
+      - name: 8. Upload Ready-to-Download APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Microbiology-Portal-Release-APK
