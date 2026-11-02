@@ -8,7 +8,7 @@ void main() async {
 
 /// ضع رابط الـ Web App الذي نسخته من Google Apps Script هنا (الذي ينتهي بـ /exec)
 const String kBaseWebAppUrl =
-    'https://script.google.com/macros/s/AKfycbygFGReaYRWp4gZqhjkc7iTbJXhfxC3rq5-w_qhYxcq9UCgfFQlOUOvC7MPf7En-FnG4A/exec';
+    'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
 class MicroDeptFlutterApp extends StatelessWidget {
   const MicroDeptFlutterApp({super.key});
@@ -45,7 +45,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
 
   int _currentPageIndex = 0; // 0 = Admin (Doctor), 1 = Super Admin
 
-  // مفاتيح للتحكم في إعادة تحميل الصفحات عند الحاجة
   final GlobalKey<_PortalWebViewKeepAliveState> _adminWebKey = GlobalKey();
   final GlobalKey<_PortalWebViewKeepAliveState> _superAdminWebKey = GlobalKey();
 
@@ -89,7 +88,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
 
     return Scaffold(
       key: _scaffoldKey,
-      // قائمة جانبية للتنقل السريع أيضاً
       drawer: _buildNavigationDrawer(isSuperAdmin),
       appBar: AppBar(
         backgroundColor: const Color(0xFF161B29),
@@ -137,13 +135,11 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
           ],
         ),
         actions: [
-          // زر إعادة تحميل الصفحة الحالية
           IconButton(
             tooltip: 'تحديث الصفحة',
             icon: const Icon(Icons.refresh_rounded, color: Colors.white70, size: 20),
             onPressed: _reloadCurrentWebView,
           ),
-          // الزر الصغير في أعلى اليمين لفتح بوابة الطالب (Student Portal)
           Padding(
             padding: const EdgeInsets.only(right: 10, left: 4),
             child: ElevatedButton.icon(
@@ -169,7 +165,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
             ),
           ),
         ],
-        // شريط علوي صغير يوضح حالة الـ Sliding بين Admin و Super Admin
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(38),
           child: Container(
@@ -237,7 +232,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
       ),
       body: Stack(
         children: [
-          // PageView يدعم السحب الأفقي (Sliding) للتحويل بين Admin و Super Admin
           PageView(
             controller: _pageController,
             onPageChanged: (idx) {
@@ -246,7 +240,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
               });
             },
             children: [
-              // الصفحة الأولى (الافتراضية): Admin (Doctor Portal)
               PortalWebViewKeepAlive(
                 key: _adminWebKey,
                 initialUrl: _adminUrl,
@@ -254,7 +247,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
                 onSwitchToAdmin: () => _animateToPage(0),
                 onSwitchToSuperAdmin: () => _animateToPage(1),
               ),
-              // الصفحة الثانية (عند عمل Sliding): Super Admin
               PortalWebViewKeepAlive(
                 key: _superAdminWebKey,
                 initialUrl: _superAdminUrl,
@@ -264,8 +256,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
               ),
             ],
           ),
-
-          // زر جانبي عائم (Side Handle Button) على حافة الشاشة للتبديل بضغطة واحدة أو السحب
           Positioned(
             right: isSuperAdmin ? null : 0,
             left: isSuperAdmin ? 0 : null,
@@ -426,7 +416,6 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
   }
 }
 
-/// شاشة مستقلة لبوابة الطالب تفتح عند الضغط على زر Student Portal في أعلى اليمين
 class StudentPortalScreen extends StatefulWidget {
   final String studentUrl;
 
@@ -468,8 +457,6 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
   }
 }
 
-/// ودجت الـ WebView مع الاحتفاظ بالحالة (AutomaticKeepAliveClientMixin)
-/// حتى لا يفقد الدكتور تسجيل الدخول عند عمل Sliding بين Admin و Super Admin
 class PortalWebViewKeepAlive extends StatefulWidget {
   final String initialUrl;
   final VoidCallback onOpenStudentPortal;
@@ -528,7 +515,6 @@ class _PortalWebViewKeepAliveState extends State<PortalWebViewKeepAlive>
               _progress = progress / 100.0;
             });
           },
-          // التقاط الروابط الداخلية في صفحات HTML وتحويلها إلى تنقل سلس داخل التطبيق
           shouldOverrideUrlLoading: (controller, navigationAction) async {
             final uri = navigationAction.request.url;
             if (uri == null) return NavigationActionPolicy.ALLOW;
@@ -536,15 +522,15 @@ class _PortalWebViewKeepAliveState extends State<PortalWebViewKeepAlive>
 
             if (urlStr.contains('page=superadmin')) {
               widget.onSwitchToSuperAdmin();
-              return NavigationActionPolicy.Cancel;
+              return NavigationActionPolicy.CANCEL;
             }
             if (urlStr.contains('page=admin')) {
               widget.onSwitchToAdmin();
-              return NavigationActionPolicy.Cancel;
+              return NavigationActionPolicy.CANCEL;
             }
             if (urlStr.endsWith('?') || urlStr == kBaseWebAppUrl) {
               widget.onOpenStudentPortal();
-              return NavigationActionPolicy.Cancel;
+              return NavigationActionPolicy.CANCEL;
             }
             return NavigationActionPolicy.ALLOW;
           },
