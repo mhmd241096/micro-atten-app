@@ -2,7 +2,6 @@
 // MICROBIOLOGY & IMMUNOLOGY ACADEMIC PORTAL — NATIVE 2026 EDITION
 // Faculty of Pharmacy • Beni-Suef University (BSU) & National University (BSNU)
 // 100% Native Flutter UI (Zero WebView / Zero Google Apps Script Banner)
-// Compatible with Flutter 3.24.x+
 // ============================================================================
 
 import 'dart:convert';
@@ -11,6 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+typedef JsonMap = Map<String, dynamic>;
+typedef StringMenuItem = DropdownMenuItem<String>;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,11 +76,11 @@ class AppColors {
 // NATIVE REST API CLIENT FOR GOOGLE APPS SCRIPT (HANDLES 302 REDIRECTS)
 // ============================================================================
 class PortalApiService {
-  static Future> call(
+  static Future<JsonMap> call(
     String action, [
-    Map<String, dynamic>? payload,
+    JsonMap? payload,
   ]) async {
-    final Map<String, dynamic> bodyData = {
+    final JsonMap bodyData = {
       'action': action,
       if (payload != null) ...payload,
     };
@@ -117,10 +119,10 @@ class PortalApiService {
     }
   }
 
-  static Map<String, dynamic> _decodeSafe(String raw) {
+  static JsonMap _decodeSafe(String raw) {
     try {
       final decoded = jsonDecode(raw);
-      if (decoded is Map<String, dynamic>) return decoded;
+      if (decoded is JsonMap) return decoded;
       return {'success': true, 'data': decoded};
     } catch (_) {
       return {
@@ -909,12 +911,12 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
   String _selectedProgram = 'General Program';
   String _selectedSubject = AppColors.defaultSubjects.first;
 
-  List> _allExcuseRequests = [];
-  List> _filteredRequests = [];
+  List<JsonMap> _allExcuseRequests = [];
+  List<JsonMap> _filteredRequests = [];
   int _selectedStudentIndex = 0;
   int _selectedPhotoIndex = 0;
 
-  Map<String, dynamic>? _currentAttendanceRecord;
+  JsonMap? _currentAttendanceRecord;
   bool _loadingAttendanceRecord = false;
   String? _statusActionMessage;
   bool _statusActionSuccess = true;
@@ -1015,7 +1017,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
   }
 
   Future<void> _loadAttendanceForSelectedStudent(
-    Map<String, dynamic> student,
+    JsonMap student,
   ) async {
     setState(() {
       _loadingAttendanceRecord = true;
@@ -1369,7 +1371,8 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: Colors.white.withOpacity(0.1),
+                              backgroundColor:
+                                  Colors.white.withOpacity(0.1),
                             ),
                             icon: const Icon(Icons.settings_rounded, size: 15),
                             label: const Text(
@@ -1385,7 +1388,8 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                             tooltip: 'Sign Out',
                             onPressed: _logoutDoctor,
                             style: IconButton.styleFrom(
-                              backgroundColor: AppColors.danger.withOpacity(0.2),
+                              backgroundColor:
+                                  AppColors.danger.withOpacity(0.2),
                               foregroundColor: Colors.white,
                             ),
                             icon: const Icon(Icons.logout_rounded, size: 17),
@@ -2017,7 +2021,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
     );
   }
 
-  Widget _buildDoctorAttendanceCard(Map<String, dynamic> student) {
+  Widget _buildDoctorAttendanceCard(JsonMap student) {
     if (_loadingAttendanceRecord) {
       return Container(
         padding: const EdgeInsets.all(20),
@@ -2279,8 +2283,8 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
   String _savedMasterUser = '';
   String _savedMasterPass = '';
 
-  List> _doctorsList = [];
-  List> _auditLogs = [];
+  List<JsonMap> _doctorsList = [];
+  List<JsonMap> _auditLogs = [];
   String? _manageMsg;
   bool _manageSuccess = true;
 
@@ -2295,10 +2299,10 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
 
     if (res['success'] == true) {
       setState(() {
-        _doctorsList = List>.from(
+        _doctorsList = List<JsonMap>.from(
           (res['doctors'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
-        _auditLogs = List>.from(
+        _auditLogs = List<JsonMap>.from(
           (res['auditLogs'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
       });
@@ -2328,10 +2332,10 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
         _isLoggedIn = true;
         _savedMasterUser = u;
         _savedMasterPass = p;
-        _doctorsList = List>.from(
+        _doctorsList = List<JsonMap>.from(
           (res['doctors'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
-        _auditLogs = List>.from(
+        _auditLogs = List<JsonMap>.from(
           (res['auditLogs'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
       });
@@ -2378,10 +2382,10 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
         _docNameCtrl.clear();
         _docUserCtrl.clear();
         _docPassCtrl.clear();
-        _doctorsList = List>.from(
+        _doctorsList = List<JsonMap>.from(
           (res['doctors'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
-        _auditLogs = List>.from(
+        _auditLogs = List<JsonMap>.from(
           (res['auditLogs'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
       }
@@ -2399,10 +2403,10 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
 
     if (res['success'] == true) {
       setState(() {
-        _doctorsList = List>.from(
+        _doctorsList = List<JsonMap>.from(
           (res['doctors'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
-        _auditLogs = List>.from(
+        _auditLogs = List<JsonMap>.from(
           (res['auditLogs'] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
         );
       });
@@ -2622,7 +2626,8 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
                         onPressed: _logoutSuperAdmin,
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: AppColors.danger.withOpacity(0.25),
+                          backgroundColor:
+                              AppColors.danger.withOpacity(0.25),
                         ),
                         icon: const Icon(Icons.logout_rounded, size: 15),
                         label: const Text(
@@ -3025,7 +3030,7 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
   String _selectedProgram = 'Clinical Program';
   String _selectedSubject = AppColors.defaultSubjects.first;
 
-  Map<String, dynamic>? _attendanceResult;
+  JsonMap? _attendanceResult;
 
   // Excuse submission state
   int? _excuseSectionNumber;
@@ -3110,7 +3115,7 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
 
     _setLoading(true, 'Uploading Medical Excuse...');
 
-    final List> encodedFiles = [];
+    final List<JsonMap> encodedFiles = [];
     for (final img in _pickedImages) {
       final bytes = await img.readAsBytes();
       encodedFiles.add({
@@ -3652,7 +3657,7 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
     );
   }
 
-  Widget _buildStudentResultSection(Map<String, dynamic> res) {
+  Widget _buildStudentResultSection(JsonMap res) {
     final stats = Map<String, dynamic>.from(res['stats'] ?? {});
     final List allSecs = (res['sections'] is List) ? res['sections'] : [];
     final absentSecs = allSecs
@@ -3960,7 +3965,7 @@ Widget _buildModernTextField({
 Widget _buildDropdown({
   required String label,
   required String value,
-  required List<DropdownMenuItem<String>> items,
+  required List<StringMenuItem> items,
   required ValueChanged<String?> onChanged,
 }) {
   return Column(
