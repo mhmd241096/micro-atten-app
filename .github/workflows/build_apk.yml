@@ -51,10 +51,10 @@ jobs:
           # إضافة صلاحية الإنترنت في AndroidManifest.xml
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/><application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
 
-          # ضبط compileSdk=35 و minSdk=21 في build.gradle لتوافق أحدث الحزم
+          # ضبط compileSdk=34 و minSdk=21 في build.gradle
           if [ -f "android/app/build.gradle" ]; then
-            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/g' android/app/build.gradle
-            sed -i 's/compileSdk flutter.compileSdkVersion/compileSdk 35/g' android/app/build.gradle
+            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 34/g' android/app/build.gradle
+            sed -i 's/compileSdk flutter.compileSdkVersion/compileSdk 34/g' android/app/build.gradle
             sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle
             sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
           fi
