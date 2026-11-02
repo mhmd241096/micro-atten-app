@@ -20,65 +20,51 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 3. Set up Flutter SDK on Cloud
+      - name: 3. Set up Stable Flutter SDK
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
-      - name: 4. Backup User Files & Generate Android Project
+      - name: 4. Create Clean Android Project & Inject Code
         run: |
-          # حفظ ملف الكود و pubspec قبل توليد ملفات الأندرويد حتى لا يتم مسحها
-          mkdir -p /tmp/backup
+          # إنشاء مشروع فلاتر نظيف تماماً لتجنب أي تعارض في ملفات Gradle
+          flutter create --org com.bsu.microbiology --project-name micro_portal_app --platforms=android clean_app
+
+          # نسخ ملف الكود الخاص بك إلى المشروع النظيف
           if [ -f "lib/main.dart" ]; then
-            cp lib/main.dart /tmp/backup/main.dart
+            cp lib/main.dart clean_app/lib/main.dart
           elif [ -f "main.dart" ]; then
-            cp main.dart /tmp/backup/main.dart
-          fi
-          if [ -f "pubspec.yaml" ]; then
-            cp pubspec.yaml /tmp/backup/pubspec.yaml
+            cp main.dart clean_app/lib/main.dart
           fi
 
-          # توليد بيئة الأندرويد الكاملة
-          flutter create . --project-name micro_portal_app --org com.bsu.microbiology --platforms=android
+          # حذف ملف الاختبار الافتراضي
+          rm -f clean_app/test/widget_test.dart
 
-          # استرجاع ملفاتك الأصلية بعد التوليد
-          mkdir -p lib
-          if [ -f "/tmp/backup/main.dart" ]; then
-            cp /tmp/backup/main.dart lib/main.dart
-          fi
-          if [ -f "/tmp/backup/pubspec.yaml" ]; then
-            cp /tmp/backup/pubspec.yaml pubspec.yaml
-          fi
-
-          # إزالة ملف اختبار العداد الافتراضي الذي يسبب فشل البناء
-          rm -f test/widget_test.dart
-
-      - name: 5. Configure Android Manifest & SDK Versions
+      - name: 5. Add WebView Dependency & Configure Android
+        working-directory: clean_app
         run: |
-          # إضافة صلاحية الإنترنت في AndroidManifest.xml
+          # إضافة مكتبة WebView بأحدث إصدار متوافق
+          flutter pub add flutter_inappwebview
+
+          # إضافة صلاحية الإنترنت ودعم الروابط في AndroidManifest.xml
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/><application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
 
-          # رفع compileSdk إلى 35 و minSdk إلى 21 لدعم flutter_inappwebview
+          # ضبط compileSdk=34 و minSdk=21 في build.gradle
           if [ -f "android/app/build.gradle" ]; then
-            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/g' android/app/build.gradle
-            sed -i 's/compileSdk flutter.compileSdkVersion/compileSdk 35/g' android/app/build.gradle
+            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 34/g' android/app/build.gradle
+            sed -i 's/compileSdk flutter.compileSdkVersion/compileSdk 34/g' android/app/build.gradle
             sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle
             sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
           fi
-          if [ -f "android/app/build.gradle.kts" ]; then
-            sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/g' android/app/build.gradle.kts
-            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle.kts
-          fi
 
-      - name: 6. Install Flutter Dependencies
-        run: flutter pub get
-
-      - name: 7. Build Release APK
+      - name: 6. Build Release APK
+        working-directory: clean_app
         run: flutter build apk --release --no-tree-shake-icons
 
-      - name: 8. Upload Ready-to-Download APK Artifact
+      - name: 7. Upload Ready-to-Download APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Microbiology-Portal-Release-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: clean_app/build/app/outputs/flutter-apk/app-release.apk
