@@ -1,5 +1,3 @@
-pubspec.yaml
-100‎%‎
 name: micro_portal_app
 description: Microbiology & Immunology Academic Portal — BSU & BSNU (Native 2026 Edition)
 publish_to: 'none'
@@ -22,4 +20,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-جارٍ عرض pubspec.yaml.
