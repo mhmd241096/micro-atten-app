@@ -1,0 +1,20 @@
+name: micro_portal_app
+description: Microbiology & Immunology Academic Portal — BSU & BSNU (Admin, Super Admin & Student Portal)
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_inappwebview: ^6.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
