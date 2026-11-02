@@ -1,0 +1,45 @@
+name: Build Release APK on Cloud
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build_apk:
+    name: Build Microbiology Portal APK (Cloud)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: 2. Set up Java 17 for Android Build
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 3. Set up Flutter SDK on Cloud
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 4. Generate Android Platform Files & Permissions
+        run: |
+          flutter create . --project-name micro_portal_app --org com.bsu.microbiology --platforms=android
+          # إضافة صلاحية الإنترنت ورفع ملفات الأعذار الطبية في AndroidManifest.xml تلقائياً على السحابة
+          sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/><application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
+
+      - name: 5. Install Flutter Dependencies
+        run: flutter pub get
+
+      - name: 6. Build Release APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      - name: 7. Upload Ready-to-Download APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Microbiology-Portal-Release-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
