@@ -2,6 +2,7 @@
 // MICROBIOLOGY & IMMUNOLOGY ACADEMIC PORTAL — NATIVE 2026 EDITION
 // Faculty of Pharmacy • Beni-Suef University (BSU) & National University (BSNU)
 // 100% Native Flutter UI (Zero WebView / Zero Google Apps Script Banner)
+// Compatible with Flutter 3.24.x+
 // ============================================================================
 
 import 'dart:convert';
@@ -168,12 +169,12 @@ class TopFloatingCircularLoader extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(999),
                 border: Border.all(
-                  color: AppColors.gold.withValues(alpha: 0.65),
+                  color: AppColors.gold.withOpacity(0.65),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.navyDeep.withValues(alpha: 0.18),
+                    color: AppColors.navyDeep.withOpacity(0.18),
                     blurRadius: 20,
                     spreadRadius: 1,
                     offset: const Offset(0, 6),
@@ -365,8 +366,8 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
               decoration: BoxDecoration(
                 color: isSuperAdmin
-                    ? AppColors.gold.withValues(alpha: 0.16)
-                    : AppColors.emerald.withValues(alpha: 0.18),
+                    ? AppColors.gold.withOpacity(0.16)
+                    : AppColors.emerald.withOpacity(0.18),
                 borderRadius: BorderRadius.circular(9),
                 border: Border.all(
                   color: isSuperAdmin ? AppColors.gold : AppColors.emerald,
@@ -447,11 +448,11 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
                       : AppColors.gold,
                   side: BorderSide(
                     color: isSuperAdmin
-                        ? AppColors.emeraldLight.withValues(alpha: 0.7)
-                        : AppColors.gold.withValues(alpha: 0.8),
+                        ? AppColors.emeraldLight.withOpacity(0.7)
+                        : AppColors.gold.withOpacity(0.8),
                     width: 1.3,
                   ),
-                  backgroundColor: Colors.white.withValues(alpha: 0.06),
+                  backgroundColor: Colors.white.withOpacity(0.06),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   minimumSize: Size.zero,
@@ -537,7 +538,7 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: !isSuperAdmin
-                                    ? AppColors.emerald.withValues(alpha: 0.5)
+                                    ? AppColors.emerald.withOpacity(0.5)
                                     : Colors.transparent,
                               ),
                             ),
@@ -570,7 +571,7 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: isSuperAdmin
-                                    ? AppColors.gold.withValues(alpha: 0.5)
+                                    ? AppColors.gold.withOpacity(0.5)
                                     : Colors.transparent,
                               ),
                             ),
@@ -656,7 +657,7 @@ class _MainAdminSuperShellState extends State<MainAdminSuperShell> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
                   decoration: BoxDecoration(
-                    color: AppColors.navyBar.withValues(alpha: 0.94),
+                    color: AppColors.navyBar.withOpacity(0.94),
                     borderRadius: BorderRadius.horizontal(
                       left:
                           isSuperAdmin ? Radius.zero : const Radius.circular(14),
@@ -1129,7 +1130,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
               border: Border.all(color: AppColors.cardBorder, width: 1.2),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.navyDeep.withValues(alpha: 0.08),
+                  color: AppColors.navyDeep.withOpacity(0.08),
                   blurRadius: 36,
                   offset: const Offset(0, 16),
                 ),
@@ -1147,7 +1148,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                     border: Border.all(color: AppColors.gold, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.gold.withValues(alpha: 0.25),
+                        color: AppColors.gold.withOpacity(0.25),
                         blurRadius: 16,
                       ),
                     ],
@@ -1342,7 +1343,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(color: Colors.white24),
                           ),
@@ -1368,8 +1369,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor:
-                                  Colors.white.withValues(alpha: 0.1),
+                              backgroundColor: Colors.white.withOpacity(0.1),
                             ),
                             icon: const Icon(Icons.settings_rounded, size: 15),
                             label: const Text(
@@ -1385,8 +1385,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                             tooltip: 'Sign Out',
                             onPressed: _logoutDoctor,
                             style: IconButton.styleFrom(
-                              backgroundColor:
-                                  AppColors.danger.withValues(alpha: 0.2),
+                              backgroundColor: AppColors.danger.withOpacity(0.2),
                               foregroundColor: Colors.white,
                             ),
                             icon: const Icon(Icons.logout_rounded, size: 17),
@@ -1436,7 +1435,7 @@ class DoctorPortalNativePageState extends State<DoctorPortalNativePage>
                     border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.navyDeep.withValues(alpha: 0.08),
+                        color: AppColors.navyDeep.withOpacity(0.08),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -2434,7 +2433,7 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
               border: Border.all(color: AppColors.gold, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.navyDeep.withValues(alpha: 0.1),
+                  color: AppColors.navyDeep.withOpacity(0.1),
                   blurRadius: 36,
                   offset: const Offset(0, 16),
                 ),
@@ -2623,8 +2622,7 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
                         onPressed: _logoutSuperAdmin,
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor:
-                              AppColors.danger.withValues(alpha: 0.25),
+                          backgroundColor: AppColors.danger.withOpacity(0.25),
                         ),
                         icon: const Icon(Icons.logout_rounded, size: 15),
                         label: const Text(
@@ -2669,7 +2667,7 @@ class SuperAdminNativePageState extends State<SuperAdminNativePage>
                     border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.navyDeep.withValues(alpha: 0.08),
+                        color: AppColors.navyDeep.withOpacity(0.08),
                         blurRadius: 20,
                       ),
                     ],
@@ -3232,10 +3230,10 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.gold.withValues(alpha: 0.14),
+                          color: AppColors.gold.withOpacity(0.14),
                           borderRadius: BorderRadius.circular(999),
                           border: Border.all(
-                            color: AppColors.gold.withValues(alpha: 0.4),
+                            color: AppColors.gold.withOpacity(0.4),
                           ),
                         ),
                         child: const Text(
@@ -3288,7 +3286,7 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
                         border: Border.all(color: AppColors.cardBorder),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.navyDeep.withValues(alpha: 0.08),
+                            color: AppColors.navyDeep.withOpacity(0.08),
                             blurRadius: 30,
                             offset: const Offset(0, 12),
                           ),
@@ -3568,7 +3566,7 @@ class _StudentPortalNativeScreenState extends State<StudentPortalNativeScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.14),
+                    color: primaryColor.withOpacity(0.14),
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
