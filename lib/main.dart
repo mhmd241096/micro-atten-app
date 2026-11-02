@@ -8,7 +8,7 @@ void main() async {
 
 /// ضع رابط الـ Web App الذي نسخته من Google Apps Script هنا (الذي ينتهي بـ /exec)
 const String kBaseWebAppUrl =
-    'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+    'https://script.google.com/macros/s/AKfycbygFGReaYRWp4gZqhjkc7iTbJXhfxC3rq5-w_qhYxcq9UCgfFQlOUOvC7MPf7En-FnG4A/exec';
 
 class MicroDeptFlutterApp extends StatelessWidget {
   const MicroDeptFlutterApp({super.key});
