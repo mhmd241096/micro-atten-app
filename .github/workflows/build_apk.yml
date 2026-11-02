@@ -1,3 +1,6 @@
+
+build_apk.yml
+100‎%‎
 name: Build Release APK on Cloud
 
 on:
@@ -7,7 +10,7 @@ on:
 
 jobs:
   build_apk:
-    name: Build Microbiology Portal APK (Cloud)
+    name: Build Microbiology Portal Native APK (2026 Edition)
     runs-on: ubuntu-latest
 
     steps:
@@ -27,12 +30,12 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: 4. Create Clean Android Project & Inject Code
+      - name: 4. Create Clean Android Project & Inject Native Code
         run: |
           # إنشاء مشروع فلاتر نظيف تماماً لتجنب أي تعارض في ملفات Gradle
           flutter create --org com.bsu.microbiology --project-name micro_portal_app --platforms=android clean_app
 
-          # نسخ ملف الكود الخاص بك إلى المشروع النظيف
+          # نسخ ملف الكود الرئيسي إلى المشروع النظيف
           if [ -f "lib/main.dart" ]; then
             cp lib/main.dart clean_app/lib/main.dart
           elif [ -f "main.dart" ]; then
@@ -42,13 +45,13 @@ jobs:
           # حذف ملف الاختبار الافتراضي
           rm -f clean_app/test/widget_test.dart
 
-      - name: 5. Add WebView Dependency & Configure Android
+      - name: 5. Add Native Dependencies & Configure Android Permissions
         working-directory: clean_app
         run: |
-          # إضافة مكتبة WebView بأحدث إصدار متوافق
-          flutter pub add flutter_inappwebview
+          # إضافة حزم الاتصال المباشر واختيار الصور والروابط (بدون WebView)
+          flutter pub add http image_picker url_launcher
 
-          # إضافة صلاحية الإنترنت ودعم الروابط في AndroidManifest.xml
+          # إضافة صلاحية الإنترنت في AndroidManifest.xml
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/><application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
 
           # ضبط compileSdk=34 و minSdk=21 في build.gradle
@@ -68,3 +71,4 @@ jobs:
         with:
           name: Microbiology-Portal-Release-APK
           path: clean_app/build/app/outputs/flutter-apk/app-release.apk
+جارٍ عرض build_apk.yml.
