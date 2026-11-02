@@ -1,6 +1,3 @@
-
-build_apk.yml
-100‎%‎
 name: Build Release APK on Cloud
 
 on:
@@ -71,4 +68,3 @@ jobs:
         with:
           name: Microbiology-Portal-Release-APK
           path: clean_app/build/app/outputs/flutter-apk/app-release.apk
-جارٍ عرض build_apk.yml.
