@@ -1,22 +1,21 @@
-name: micro_portal_app
-description: Microbiology & Immunology Academic Portal — BSU & BSNU (Native 2026 Edition)
+name: micro_hub
+description: Department of Microbiology & Immunology — Student Academic Portal (BSU & BSNU)
 publish_to: 'none'
 version: 2.0.0+2
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.2
-  image_picker: ^1.1.2
-  url_launcher: ^6.3.1
+  flutter_inappwebview: ^6.0.0
+  url_launcher: ^6.3.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true
